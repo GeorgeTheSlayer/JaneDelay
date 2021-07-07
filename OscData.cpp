@@ -71,7 +71,7 @@ void PhaseOsc::setWave (const float choice)
     
     else if (choice >= 3.0f && choice < 4.0f)
     {
-        Yptr = squareWave;
+        Yptr = sawPulse;
     }
     
     else

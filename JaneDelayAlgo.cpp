@@ -19,6 +19,9 @@ void JaneDelay::init(float sampleRate)
     //Set the Max delay Size
     SIZE = MAXDELAY * sampleRate * 1;
     
+    //DelayLine.init(sampleRate, MAXDELAY);
+    
+    
     //if the delay buffer exist then delete it
     if (delayBuffer)
         delete [] delayBuffer;
@@ -53,7 +56,8 @@ void JaneDelay::setDelay(float time, float feedback, float width, float freq, fl
     Time = (int)(time * SampleRate);
     
     //Set the Filter for the Osc
-    Osc.setFilter(filter, filter);
+    //Osc.setFilter(filter, filter);
+    Osc.setWave(filter * 3.9f);
     
     //If delta is greater than the Size of buffer truncate
     if (Time >= SIZE)
@@ -79,6 +83,7 @@ void JaneDelay::process(float *inbuffer, int numSamples)
         
         //Write to delay
         write(input + Output * FeedBack);
+        //DelayLine.write(input);
         
         float localTargetWidth = Width;
         
@@ -112,6 +117,7 @@ void JaneDelay::process(float *inbuffer, int numSamples)
         
         //Read from delay Line
         Output = read(currentTime + lfo + 1.0f);
+        //Output = DelayLine.read(currentTime + lfo + 1.0f);
         
         //Create Dry Wet Mix
         float audioMix = input * dryMix + Output * wetMix;

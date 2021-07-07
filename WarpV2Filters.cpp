@@ -12,7 +12,7 @@
 #include "math.h"
 
 
-void Filter::prepareToPlay(float SR)
+void Filter::prepareToPlay (float SR)
 {
     sampleRate = SR;
     xN1 = 0.0f;
@@ -21,7 +21,7 @@ void Filter::prepareToPlay(float SR)
     yN2 = 0.0f;
 }
 
-float Filter::process(float currentSample)
+float Filter::process (float currentSample)
 {
     //Make X == Current Sample
     x = currentSample;
@@ -39,7 +39,7 @@ float Filter::process(float currentSample)
     return y;
 }
 
-void LowShelfFilter::setFreq(float gain, float freq, float S)
+void LowShelfFilter::setFreq (float gain, float freq, float S)
 {
 
     //Low Shelf Filter Equations
@@ -56,7 +56,7 @@ void LowShelfFilter::setFreq(float gain, float freq, float S)
     a2 =       (A + 1) + (A - 1) * cos(w0) - beta ;
 }
 
-void HighShelfFilter::setFreq(float gain, float freq, float S)
+void HighShelfFilter::setFreq (float gain, float freq, float S)
 {
     //High Shelf Filter
     w0 = 2 * 3.14 * freq / sampleRate;
@@ -73,7 +73,7 @@ void HighShelfFilter::setFreq(float gain, float freq, float S)
 
 }
 
-void BellCurveFilter::setFreq(float gain, float freq, float BW)
+void BellCurveFilter::setFreq (float gain, float freq, float BW)
 {
     Gain = gain;
     //Peaking Eq
@@ -90,7 +90,7 @@ void BellCurveFilter::setFreq(float gain, float freq, float BW)
     
 }
 
-void LowPassFilter::setFreq(float freq, float Q)
+void LowPassFilter::setFreq (float freq, float Q)
 {
     //Create Coeficents
     w0 = 2 * 3.14 * freq / sampleRate;
@@ -104,7 +104,7 @@ void LowPassFilter::setFreq(float freq, float Q)
     a2 =  1 - alpha;
 }
 
-void HighPassFilter::setFreq(float freq, float Q)
+void HighPassFilter::setFreq (float freq, float Q)
 {
     //Create Coeficents
     w0 = 2 * 3.14 * freq / sampleRate;
@@ -118,7 +118,7 @@ void HighPassFilter::setFreq(float freq, float Q)
     a2 =   1 - alpha;
 }
 
-void AllPassFilter::setFreq(float freq, float Q = 1)
+void AllPassFilter::setFreq (float freq, float Q = 1)
 {
     //Create Coeficents
     w0 = 2 * 3.14 * freq / sampleRate;
@@ -132,7 +132,7 @@ void AllPassFilter::setFreq(float freq, float Q = 1)
     a2 = 1 - alpha;
 }
 
-void LinkwitzCrossover::prepareToPlay(float SR)
+void LinkwitzCrossover::prepareToPlay (float SR)
 {
     //Init Filter
     sampleRate = SR;
@@ -147,7 +147,7 @@ void LinkwitzCrossover::prepareToPlay(float SR)
     hp_xm1 = 0.0f;
 }
 
-void LinkwitzCrossover::setFreq(float fc)
+void LinkwitzCrossover::setFreq (float fc)
 {
     //Create Varibles
     //Wc Varibles
@@ -179,7 +179,7 @@ void LinkwitzCrossover::setFreq(float fc)
     a2_hp = (k2)/tmpk;
 }
 
-float LinkwitzCrossover::processLow(float currentSample)
+float LinkwitzCrossover::processLow (float currentSample)
 {
     //Process Low Output
     lp_out = a0_lp * Input + lp_xm0;
@@ -191,7 +191,7 @@ float LinkwitzCrossover::processLow(float currentSample)
     
 }
 
-float LinkwitzCrossover::processHigh(float currentSample)
+float LinkwitzCrossover::processHigh (float currentSample)
 {
     //Make currentSample == Input
     Input = currentSample;
@@ -223,7 +223,7 @@ void SinglePoleLowPassFilter::setValueInSamples (float value)
     float tempValue = std::expf(-1.0f / value);
     
     //Create Equation
-    setValueInX(tempValue);
+    setValueInX (tempValue);
 }
 
 void SinglePoleLowPassFilter::setValueInSeconds (float time)
@@ -233,7 +233,7 @@ void SinglePoleLowPassFilter::setValueInSeconds (float time)
     float seconds = time * sampleRate;
     
     //Create Filter from sample Value
-    setValueInSamples(seconds);
+    setValueInSamples (seconds);
 }
 
 //TODO FIX
@@ -255,7 +255,7 @@ void SinglePoleHighPassFilter::setValueInSamples (float value)
     float tempValue = std::expf(-1.0f / value);
     
     //Create Equation
-    setValueInX(tempValue);
+    setValueInX (tempValue);
 }
 
 void SinglePoleHighPassFilter::setValueInSeconds (float time)
@@ -265,5 +265,5 @@ void SinglePoleHighPassFilter::setValueInSeconds (float time)
     float seconds = time * sampleRate;
     
     //Create Filter from sample Value
-    setValueInSamples(seconds);
+    setValueInSamples (seconds);
 }

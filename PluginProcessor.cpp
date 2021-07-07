@@ -160,6 +160,8 @@ void JaneAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
         Jane[channel].setDelay(*delayTime, *feedBack, *Width, *freq, *JaneFilter);
         Jane[channel].setMix(*dryMix, *wetMix);
         
+        //for (i = 0)
+        
     }
     
 }

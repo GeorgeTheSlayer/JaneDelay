@@ -13,6 +13,7 @@
 #include <JuceHeader.h>
 #include "WarpV2Filters.h"
 #include "OscData.h"
+//#include "DspModules.hpp"
 
 
 
@@ -54,7 +55,7 @@ public:
 private:
     
     //Gets the Interpolated Value of the Delay
-    float interpolate(float delayInSamples);
+    float interpolate (float delayInSamples);
 
     //Delay Line Varibles
     float* delayBuffer = NULL;
@@ -87,8 +88,7 @@ private:
     
     //Create Supporting Objects
     PhaseOsc Osc;
-    LowPassFilter SlewFilter, AudioFilter, FeedBackFilter;
-    MovingAverageFilter AverageFilter;
+    //Holland::Utilities::DelayLine DelayLine;
     
 };
 

@@ -15,9 +15,9 @@
 class Filter
 {
 public:
-    void prepareToPlay(float sampleRate);
+    void prepareToPlay (float sampleRate);
     
-    float process(float currentSample);
+    float process (float currentSample);
     
 protected:
     //Declare Filter Coeficeints
@@ -37,14 +37,14 @@ protected:
 class LowShelfFilter: public Filter
 {
 public:
-    void setFreq(float gain, float freq, float S);
+    void setFreq (float gain, float freq, float S);
 };
 
 //Create Class for HighShelf Filter
 class HighShelfFilter: public Filter
 {
 public:
-    void setFreq(float gain, float freq, float S);
+    void setFreq (float gain, float freq, float S);
 };
 
 //Create Class for Mid Freq
