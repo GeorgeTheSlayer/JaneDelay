@@ -13,7 +13,7 @@
 #include <JuceHeader.h>
 #include "WarpV2Filters.h"
 #include "OscData.h"
-//#include "DspModules.hpp"
+#include "DspModules.hpp"
 
 
 
@@ -75,8 +75,6 @@ private:
     
     //Modulation Varibles
     float Time = 0.125f;
-    float angleDelta;
-    float oscAngle = 0.0f;
     
     //Time varibles for smoothing the delay line
     float currentTime;
@@ -87,8 +85,9 @@ private:
 
     
     //Create Supporting Objects
-    PhaseOsc Osc;
-    //Holland::Utilities::DelayLine DelayLine;
+    Holland::Utilities::DelayLine DelayLine;
+    Holland::CustomOscillator::PhaseOsc Osc;
+    Holland::Utilities::SmoothValue timeValueSmoothed, widthValueSmoothed;
     
 };
 

@@ -19,7 +19,7 @@ void JaneDelay::init(float sampleRate)
     //Set the Max delay Size
     SIZE = MAXDELAY * sampleRate * 1;
     
-    //DelayLine.init(sampleRate, MAXDELAY);
+    DelayLine.init(sampleRate, MAXDELAY);
     
     
     //if the delay buffer exist then delete it
@@ -32,13 +32,22 @@ void JaneDelay::init(float sampleRate)
     if (delayBuffer)
     memset(delayBuffer, 0, SIZE);
     
+    //Init Smooth valeus
+    float slewRate = 0.25f;
+    timeValueSmoothed.init (SampleRate);
+    timeValueSmoothed.setSlewInSeconds (slewRate);
+    widthValueSmoothed.init(SampleRate);
+    widthValueSmoothed.setSlewInSeconds(slewRate);
+    
     //Set Object Defaults
-    Osc.setWave(1.5f);
+    Osc.init (sampleRate);
+    Osc.setWave (1.5f);
+    Osc.setFreq (0.5f);
     
     currentWidth = 0.0f;
     writePointer = 0;
-    setDelay(0.5f, 0.0f, 0.0f, 0.1f, 0.0f);
-    setMix(0.0f, 0.0f);
+    setDelay (0.5f, 0.0f, 0.0f, 0.1f, 0.0f);
+    setMix (0.0f, 0.0f);
 }
 
 void JaneDelay::setDelay(float time, float feedback, float width, float freq, float filter)
@@ -50,7 +59,7 @@ void JaneDelay::setDelay(float time, float feedback, float width, float freq, fl
     FeedBack = feedback;
     
     //Set the Freq of the LFO
-    angleDelta = (freq * 5.0f) / SampleRate;
+    Osc.setFreq(freq * 5.0f);
     
     //Set the Delay time to delta
     Time = (int)(time * SampleRate);
@@ -82,42 +91,20 @@ void JaneDelay::process(float *inbuffer, int numSamples)
         float input = inbuffer[i];
         
         //Write to delay
-        write(input + Output * FeedBack);
-        //DelayLine.write(input);
+        DelayLine.write(input + Output * FeedBack);
         
-        float localTargetWidth = Width;
-        
-        //Create slew with change in the delay time
-        if (localTargetWidth != currentWidth)
-        {
-            float timeInc = (localTargetWidth - currentWidth) / (SampleRate / 4.0f);
-            currentWidth += timeInc;
-        }
+        //Set target to be smoothed
+        widthValueSmoothed.setTarget(Width);
         
         //Process Osc
-        float oscOut = std::sin(Osc.getCurrentSample(oscAngle) * 2.0f * juce::MathConstants<float>::pi);
-        float lfo = ((oscOut + 1.0f) * currentWidth * 0.0025f) * SampleRate;
+        float oscOut = std::sin(Osc.getCurrentSample() * 2.0f * juce::MathConstants<float>::pi);
+        float lfo = ((oscOut + 1.0f) * widthValueSmoothed.getCurrentValue() * 0.0025f) * SampleRate;
         
-        //Set Osc for Next Sample
-        oscAngle += angleDelta;
-        
-        //If the Osc is greater than one then reset the phase
-        if (oscAngle >= 1)
-            oscAngle -= 1;
-        
-        //Create a local varible for what the target should be
-        float localTargetTime = Time;
-        
-        //Create slew with change in the delay time
-        if (localTargetTime != currentTime)
-        {
-            float timeInc = (localTargetTime - currentTime) / (SampleRate / 4.0f);
-            currentTime += timeInc;
-        }
+        //Set Smootedh Value
+        timeValueSmoothed.setTarget(Time);
         
         //Read from delay Line
-        Output = read(currentTime + lfo + 1.0f);
-        //Output = DelayLine.read(currentTime + lfo + 1.0f);
+        Output = DelayLine.read(timeValueSmoothed.getCurrentValue() + lfo + 1.0f);
         
         //Create Dry Wet Mix
         float audioMix = input * dryMix + Output * wetMix;
