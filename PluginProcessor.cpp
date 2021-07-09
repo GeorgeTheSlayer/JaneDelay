@@ -223,7 +223,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout JaneAudioProcessor::createPa
     
     params.push_back (std::make_unique<juce::AudioParameterFloat> ("PARAMTHREE", "paramthree", juce::NormalisableRange<float> (0.0f, stop, interval, 1 ), init ) );
     
-    params.push_back (std::make_unique<juce::AudioParameterFloat> ("PARAMFOUR", "paramfour", juce::NormalisableRange<float> (0.01f, stop, interval, 1 ), init ) );
+    params.push_back (std::make_unique<juce::AudioParameterFloat> ("PARAMFOUR", "paramfour", juce::NormalisableRange<float> (0.001f, stop, interval, 1 ), init ) );
     
     params.push_back (std::make_unique<juce::AudioParameterFloat> ("PARAMFIVE", "paramfive", juce::NormalisableRange<float> (0.0f, stop, interval, 1 ), init ) );
     

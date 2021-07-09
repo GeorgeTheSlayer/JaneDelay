@@ -19,7 +19,8 @@ void JaneDelay::init(float sampleRate)
     //Set the Max delay Size
     SIZE = MAXDELAY * sampleRate * 1;
     
-    DelayLine.init(sampleRate, MAXDELAY);
+    //Init Delay Line
+    DelayLine.init(SampleRate, MAXDELAY);
     
     
     //if the delay buffer exist then delete it
@@ -50,7 +51,7 @@ void JaneDelay::init(float sampleRate)
     setMix (0.0f, 0.0f);
 }
 
-void JaneDelay::setDelay(float time, float feedback, float width, float freq, float filter)
+void JaneDelay::setDelay (float time, float feedback, float width, float freq, float filter)
 {
     //Set Modulation Amount for the LFO
     Width = width;
@@ -59,7 +60,7 @@ void JaneDelay::setDelay(float time, float feedback, float width, float freq, fl
     FeedBack = feedback;
     
     //Set the Freq of the LFO
-    Osc.setFreq(freq * 5.0f);
+    Osc.setFreq (freq * 5.0f);
     
     //Set the Delay time to delta
     Time = (int)(time * SampleRate);
@@ -74,7 +75,7 @@ void JaneDelay::setDelay(float time, float feedback, float width, float freq, fl
     
 }
 
-void JaneDelay::setMix(float dry, float wet)
+void JaneDelay::setMix (float dry, float wet)
 {
     //Set Dry wet Mix
     dryMix = juce::Decibels::decibelsToGain(dry);
@@ -82,7 +83,7 @@ void JaneDelay::setMix(float dry, float wet)
 }
 
 
-void JaneDelay::process(float *inbuffer, int numSamples)
+void JaneDelay::process (float *inbuffer, int numSamples)
 {
     
     for (int i = 0; i < numSamples; i++)
