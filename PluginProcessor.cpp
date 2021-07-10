@@ -138,6 +138,7 @@ bool JaneAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) con
 void JaneAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     //Create Left and Right Input Channel
+    //TODO have it be settable to either be mono or stero
     for (int channel = 0; channel < getTotalNumInputChannels(); channel++)
     {
         
@@ -151,16 +152,22 @@ void JaneAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
         delayTime = apvts.getRawParameterValue ("PARAMFOUR");
         feedBack = apvts.getRawParameterValue ("PARAMFIVE");
         
-        
+        //Get dry wet Param
         dryMix = apvts.getRawParameterValue ("DRY");
         wetMix = apvts.getRawParameterValue ("WET");
         
-        Jane[channel].process(channeldata, buffer.getNumSamples());
         
         Jane[channel].setDelay(*delayTime, *feedBack, *Width, *freq, *JaneFilter);
         Jane[channel].setMix(*dryMix, *wetMix);
         
-        //for (i = 0)
+        
+        for (int i = 0; i < buffer.getNumSamples(); i++)
+        {
+            float input = channeldata[i];
+            
+            channeldata[i] = Jane[channel].getOutput(input, 0);
+        }
+        
         
     }
     
@@ -223,7 +230,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout JaneAudioProcessor::createPa
     
     params.push_back (std::make_unique<juce::AudioParameterFloat> ("PARAMTHREE", "paramthree", juce::NormalisableRange<float> (0.0f, stop, interval, 1 ), init ) );
     
-    params.push_back (std::make_unique<juce::AudioParameterFloat> ("PARAMFOUR", "paramfour", juce::NormalisableRange<float> (0.001f, stop, interval, 1 ), init ) );
+    params.push_back (std::make_unique<juce::AudioParameterFloat> ("PARAMFOUR", "paramfour", juce::NormalisableRange<float> (0.01f, stop, interval, 1 ), init ) );
     
     params.push_back (std::make_unique<juce::AudioParameterFloat> ("PARAMFIVE", "paramfive", juce::NormalisableRange<float> (0.0f, stop, interval, 1 ), init ) );
     

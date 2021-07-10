@@ -17,30 +17,14 @@
 
 
 
-class MovingAverageFilter
-{
-public:
-    void init (int numValues);
-    float process(float input);
-    
-private:
-    int SIZE;
-    float* buffer;
-    float numerator = 0;
-};
-
-
 class JaneDelay
 {
 public:
     //Get Output of delay
     void process (float *inbuffer, int numSamples);
     
-    //Read to the delay
-    float read (float time);
-    
-    //Write to Delay
-    void write (float input);
+    //Get Output with external osc from -1 - 1
+    float getOutput (float currentSample, float externalOsc);
     
     //Set the Delay Time
     void setDelay (float time, float feedback, float width, float freq, float filter);
@@ -53,9 +37,6 @@ public:
     
     
 private:
-    
-    //Gets the Interpolated Value of the Delay
-    float interpolate (float delayInSamples);
 
     //Delay Line Varibles
     float* delayBuffer = NULL;

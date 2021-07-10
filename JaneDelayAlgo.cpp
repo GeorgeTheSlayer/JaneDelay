@@ -22,17 +22,6 @@ void JaneDelay::init(float sampleRate)
     //Init Delay Line
     DelayLine.init(SampleRate, MAXDELAY);
     
-    
-    //if the delay buffer exist then delete it
-    if (delayBuffer)
-        delete [] delayBuffer;
-    
-    //Create the Delay Buffer
-    delayBuffer = new float[SIZE];
-    
-    if (delayBuffer)
-    memset(delayBuffer, 0, SIZE);
-    
     //Init Smooth valeus
     float slewRate = 0.25f;
     timeValueSmoothed.init (SampleRate);
@@ -45,6 +34,7 @@ void JaneDelay::init(float sampleRate)
     Osc.setWave (1.5f);
     Osc.setFreq (0.5f);
     
+    //Set Varible Defaults
     currentWidth = 0.0f;
     writePointer = 0;
     setDelay (0.5f, 0.0f, 0.0f, 0.1f, 0.0f);
@@ -63,7 +53,7 @@ void JaneDelay::setDelay (float time, float feedback, float width, float freq, f
     Osc.setFreq (freq * 5.0f);
     
     //Set the Delay time to delta
-    Time = (int)(time * SampleRate);
+    Time = (int)((time * 0.005f) * SampleRate);
     
     //Set the Filter for the Osc
     //Osc.setFilter(filter, filter);
@@ -82,7 +72,8 @@ void JaneDelay::setMix (float dry, float wet)
     wetMix = juce::Decibels::decibelsToGain(wet);
 }
 
-
+//TODO don't have it's own for loop
+//Give input to osc
 void JaneDelay::process (float *inbuffer, int numSamples)
 {
     
@@ -116,80 +107,33 @@ void JaneDelay::process (float *inbuffer, int numSamples)
     
 }
 
-float JaneDelay::read(float time)
-{
-    
-    //Get the position of the read pointer
-    float readPointer = (float)writePointer - time;
-    
-    //If the Readpointer is greater than the size of the buffer Subtract size of buffer
-    if (readPointer >= SIZE)
-        readPointer -= SIZE;
-    
-    //If the readpointer is less than the size of the buffer then make it positive
-    if (readPointer < 0)
-        readPointer += SIZE;
-    
-    return interpolate(readPointer);
-}
 
-void JaneDelay::write(float input)
+float JaneDelay::getOutput(float currentSample, float externalOsc)
 {
-    //Move Cursor
-    writePointer++;
+    //Create Local Varible for input
+    float input = currentSample;
     
-    //Make sure the Curosr is valid
-    if (writePointer >= SIZE)
-        writePointer -= SIZE;
+    //Write to delay
+    DelayLine.write(input + Output * FeedBack);
     
-    //Write to Cursor
-    delayBuffer[writePointer] = input;
-}
-
-float JaneDelay::interpolate(float delayInSamples)
-{
+    //Set target to be smoothed
+    widthValueSmoothed.setTarget(Width);
     
-    //Find Vars for interpolation
-    int floor = (int)delayInSamples;
-    int round = (int)delayInSamples - 1;
+    //Process Osc
+    float oscOut = std::sin(Osc.getCurrentSample() * 2.0f * juce::MathConstants<float>::pi);
+    float lfo = ((oscOut + 1.0f) * widthValueSmoothed.getCurrentValue() * 0.0025f) * SampleRate;
     
-    //Round the Size of the Varible
-    if (round < 0)
-        round = SIZE - 1;
+    //Set Smootedh Value
+    timeValueSmoothed.setTarget(Time);
     
-    //Find the fractional value
-    float frac = delayInSamples - (int)delayInSamples;
+    //Read from delay Line
+    Output = DelayLine.read(timeValueSmoothed.getCurrentValue() + lfo + 1.0f);
     
-    //Get points in delay buffer
-    float lower = delayBuffer[floor];
-    float upper = delayBuffer[round];
+    //Create Dry Wet Mix
+    float audioMix = input * dryMix + Output * wetMix;
     
-    return (lower * frac) + (upper * (1.0f - frac));
-}
-
-void MovingAverageFilter::init(int numValues)
-{
-    SIZE = numValues;
-    buffer = new float [SIZE];
+    //Return Audiomix
+    return audioMix;
     
-}
-
-float MovingAverageFilter::process(float input)
-{
-    //Reset Numerator
-    numerator = 0;
     
-    for (int i = 0; i < SIZE; i++)
-    {
-        if (i == 0)
-            buffer[i] = input;
-        
-        else
-            buffer[i] = buffer[i - 1];
-        
-        //Add all values of the buffer
-        numerator += buffer[i];
-    }
-    
-    return numerator / SIZE;
 }

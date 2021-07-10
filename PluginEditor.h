@@ -11,6 +11,8 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "ParamComponent.h"
+#include "MixComponent.h"
+#include "ModulationComponent.h"
 
 //==============================================================================
 /**
@@ -35,6 +37,8 @@ private:
     JaneAudioProcessor& audioProcessor;
     
     ParamComponent sliderParams;
+    ModulationComponent shakeCompoment;
+    MixComponent mixComponent;
     ParamAesthetic paramLooks;
     
     //Slider Attachment

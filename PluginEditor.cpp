@@ -17,9 +17,11 @@ JaneAudioProcessorEditor::JaneAudioProcessorEditor (JaneAudioProcessor& p)
     setDryWetSlider("Dry", drySlider, dryAttachment, "DRY");
     setDryWetSlider("Wet", wetSlider, wetAttachment, "WET");
     
+    addAndMakeVisible(mixComponent);
+    addAndMakeVisible(shakeCompoment);
     addAndMakeVisible(sliderParams);
     
-    setSize (600, 300);
+    setSize (900, 450);
 }
 
 JaneAudioProcessorEditor::~JaneAudioProcessorEditor()
@@ -65,12 +67,20 @@ void JaneAudioProcessorEditor::resized()
 {
     //Get Area
     juce::Rectangle<int> totalArea = getLocalBounds();
-    auto headerFooterHieght = totalArea.getHeight() / 8.0f;
+    auto headerFooterHieght = totalArea.getHeight() / 15.0f;
     auto sideBarWidth = totalArea.getWidth() / 16.0f;
     
-    drySlider.setBounds(0, headerFooterHieght, sideBarWidth, getHeight() - (headerFooterHieght * 2.0f));
-    sliderParams.setBounds(sideBarWidth, headerFooterHieght, getWidth() - (sideBarWidth * 2), getHeight() - (headerFooterHieght * 2.0f));
-    wetSlider.setBounds(getWidth() - sideBarWidth, headerFooterHieght, sideBarWidth, getHeight() - (headerFooterHieght * 2.0f));
+    
+    juce::FlexBox fullAreaFlexBox;
+    
+    shakeCompoment.setBounds(0, headerFooterHieght, 450, getHeight() - headerFooterHieght * 2.f);
+    sliderParams.setBounds(450, headerFooterHieght, 250, getHeight() - headerFooterHieght * 2.f);
+    mixComponent.setBounds (700, headerFooterHieght, getWidth() - 700, getHeight() - headerFooterHieght * 2.f);
+    
+    //drySlider.setBounds(0, headerFooterHieght, sideBarWidth, getHeight() - (headerFooterHieght * 2.0f));
+    //sliderParams.setBounds(sideBarWidth, headerFooterHieght, getWidth() - (sideBarWidth * 2), getHeight() - (headerFooterHieght * 2.0f));
+    //wetSlider.setBounds(getWidth() - sideBarWidth, headerFooterHieght, sideBarWidth, getHeight() - (headerFooterHieght * 2.0f));
+    
 }
 
 void JaneAudioProcessorEditor::setDryWetSlider(const juce::String &name, juce::Slider &Slider, std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>& attach, const juce::String &ID)

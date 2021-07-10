@@ -42,6 +42,8 @@ private:
     //Look and Feel for each slider
     RotarySliderLookAndFeel lookAndFeel;
     
+    juce::TextButton tempButton {"Params"};
+    
     //Sliders themseleves
     juce::Slider paramOneSlider, paramTwoSlider, paramThreeSlider, paramFourSlider, paramFiveSlider;
     

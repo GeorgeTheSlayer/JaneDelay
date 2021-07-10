@@ -99,6 +99,7 @@ ParamComponent::ParamComponent(juce::AudioProcessorValueTreeState& apvts)
     setSlider("Jane", paramThreeSlider, paramThreeLabel, paramThreeAttachment, "PARAMTHREE", apvts);
     setSlider("Time", paramFourSlider, paramFourLabel, paramFourAttachment, "PARAMFOUR", apvts);
     setSlider("FeedBack", paramFiveSlider, paramFiveLabel, paramFiveAttachment, "PARAMFIVE", apvts);
+    addAndMakeVisible(tempButton);
 }
 
 ParamComponent::~ParamComponent()
@@ -150,12 +151,15 @@ void ParamComponent::resized()
     
     //Create Layout Changes
     //Slider
-    sliderFlex.items = sliderArray;
-    sliderFlex.performLayout(sliderArea);
+    sliderFlex.items = sliderArray; 
+    //sliderFlex.performLayout(sliderArea);
     
     //Labels
     labelFlex.items = labelArray;
-    labelFlex.performLayout(labelArea);
+    //labelFlex.performLayout(labelArea);
+    tempButton.setBounds(getLocalBounds());
+    
+    
 }
 
 void ParamComponent::setSlider(const juce::String &name, juce::Slider &slider, juce::Label &label, std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>& attach, const juce::String& ID, juce::AudioProcessorValueTreeState& apvts)
