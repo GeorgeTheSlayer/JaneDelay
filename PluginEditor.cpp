@@ -36,12 +36,13 @@ void JaneAudioProcessorEditor::paint (juce::Graphics& g)
     auto textSize = getWidth() / 4;
     auto fontSize = 18;
     
-    g.fillAll(juce::Colours::black);
-    g.setColour(juce::Colours::white);
+    
+    g.fillAll(fadedWhite);
+    g.setColour(matteBlack);
     g.setFont(juce::Font("Specter", fontSize, juce::Font::plain));
     g.drawFittedText("Jane", (getWidth() / 2) - (textSize / 2), getHeight() / 32, textSize, fontSize, juce::Justification::centredTop, 1, 0.0f);
     
-    g.drawFittedText("Holland Audio", (getWidth() / 2) - (textSize / 2), getHeight() - (getHeight() / 16), textSize, fontSize, juce::Justification::centredTop, 1);
+    g.drawFittedText("MailBox Audio", (getWidth() / 2) - (textSize / 2), getHeight() - (getHeight() / 16), textSize, fontSize, juce::Justification::centredTop, 1);
     
     //Draw Upper Line
     juce::Path upperLine;
@@ -73,13 +74,13 @@ void JaneAudioProcessorEditor::resized()
     
     juce::FlexBox fullAreaFlexBox;
     
-    shakeCompoment.setBounds(0, headerFooterHieght, 450, getHeight() - headerFooterHieght * 2.f);
-    sliderParams.setBounds(450, headerFooterHieght, 250, getHeight() - headerFooterHieght * 2.f);
-    mixComponent.setBounds (700, headerFooterHieght, getWidth() - 700, getHeight() - headerFooterHieght * 2.f);
+//    shakeCompoment.setBounds(0, headerFooterHieght, 450, getHeight() - headerFooterHieght * 2.f);
+//    sliderParams.setBounds(450, headerFooterHieght, 250, getHeight() - headerFooterHieght * 2.f);
+//    mixComponent.setBounds (700, headerFooterHieght, getWidth() - 700, getHeight() - headerFooterHieght * 2.f);
     
-    //drySlider.setBounds(0, headerFooterHieght, sideBarWidth, getHeight() - (headerFooterHieght * 2.0f));
-    //sliderParams.setBounds(sideBarWidth, headerFooterHieght, getWidth() - (sideBarWidth * 2), getHeight() - (headerFooterHieght * 2.0f));
-    //wetSlider.setBounds(getWidth() - sideBarWidth, headerFooterHieght, sideBarWidth, getHeight() - (headerFooterHieght * 2.0f));
+    drySlider.setBounds(0, headerFooterHieght, sideBarWidth, getHeight() - (headerFooterHieght * 2.0f));
+    sliderParams.setBounds(sideBarWidth, headerFooterHieght, getWidth() - (sideBarWidth * 2), getHeight() - (headerFooterHieght * 2.0f));
+    wetSlider.setBounds(getWidth() - sideBarWidth, headerFooterHieght, sideBarWidth, getHeight() - (headerFooterHieght * 2.0f));
     
 }
 
@@ -89,9 +90,9 @@ void JaneAudioProcessorEditor::setDryWetSlider(const juce::String &name, juce::S
     Slider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
     Slider.setName(name);
     Slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 600.0f / 5.0f, 300.0f / 16.0f - 5.0f);
-    Slider.setColour(juce::Slider::ColourIds::thumbColourId, juce::Colours::white);
-    Slider.setColour(juce::Slider::ColourIds::trackColourId, juce::Colours::white);
-    Slider.setColour(juce::Slider::ColourIds::backgroundColourId, juce::Colours::black);
+    Slider.setColour(juce::Slider::ColourIds::thumbColourId, matteBlack);
+    Slider.setColour(juce::Slider::ColourIds::trackColourId, matteBlack);
+    Slider.setColour(juce::Slider::ColourIds::backgroundColourId, fadedWhite);
     
     attach = std::make_unique <juce::AudioProcessorValueTreeState::SliderAttachment>( audioProcessor.apvts, ID, Slider );
     

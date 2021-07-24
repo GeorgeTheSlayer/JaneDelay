@@ -41,6 +41,9 @@ private:
     MixComponent mixComponent;
     ParamAesthetic paramLooks;
     
+    juce::Colour fadedWhite = juce::Colour::fromRGB(224, 224, 224);
+    juce::Colour matteBlack = juce::Colour::fromRGB(59, 66, 72);
+    
     //Slider Attachment
     using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
     std::unique_ptr<SliderAttachment> dryAttachment, wetAttachment;

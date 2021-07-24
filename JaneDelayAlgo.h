@@ -11,8 +11,8 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "WarpV2Filters.h"
-#include "OscData.h"
+//#include "WarpV2Filters.h"
+//#include "OscData.h"
 #include "DspModules.hpp"
 
 
@@ -35,9 +35,15 @@ public:
     //INIT Delay
     void init (float sampleRate);
     
+    //Set Euclidian Varibles
+    void setClid(int steps, int pulses, int rotate);
     
 private:
 
+    //Euclid Vars
+    float Steps, Pulses, Rotate;
+    std::vector<bool> tapVector;
+    
     //Delay Line Varibles
     float* delayBuffer = NULL;
     int writePointer = 0;
@@ -69,6 +75,8 @@ private:
     Holland::Utilities::DelayLine DelayLine;
     Holland::CustomOscillator::PhaseOsc Osc;
     Holland::Utilities::SmoothValue timeValueSmoothed, widthValueSmoothed;
+    Holland::CustomFilters::AllPassFilter notchOne;
+    Holland::Utilities::SystemSpecs specs;
     
 };
 

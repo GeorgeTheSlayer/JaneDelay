@@ -23,23 +23,27 @@ void RotarySliderLookAndFeel::drawRotarySlider (juce::Graphics& g, int x, int y,
     auto rw = radius * 2.0f;
     auto angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
     
+    int fadedWhiteRGB[3] = {224, 225, 228};
+    auto fadedWhite = juce::Colour::fromRGB(fadedWhiteRGB[0], fadedWhiteRGB[1], fadedWhiteRGB[2]);
+    int matteCharcoalRGB[3] = {59, 66, 72};
+    auto matteCharcoal = juce::Colour::fromRGB(matteCharcoalRGB[0], matteCharcoalRGB[1], matteCharcoalRGB[2]);
     
     // fill
-    g.setColour (juce::Colours::black);
+    g.setColour (fadedWhite);
     g.fillEllipse (rx, ry, rw, rw);
 
     // outline
-    g.setColour (juce::Colours::white);
-    g.drawEllipse (rx, ry, rw, rw, 5.0f);
+    g.setColour (matteCharcoal);
+    g.drawEllipse (rx, ry, rw, rw, 10.0f);
 
     juce::Path p;
     //auto pointerLength = radius * 0.33f;
-    auto pointerLength = radius * 0.5f;
-    auto pointerThickness = 5.0f;
+    auto pointerLength = radius * 0.35f;
+    auto pointerThickness = 10.0f;
     p.addRectangle (-pointerThickness * 0.5f, -radius, pointerThickness, pointerLength);
     p.applyTransform (juce::AffineTransform::rotation (angle).translated (centreX, centreY));
     
-    g.setColour (juce::Colours::white);
+    g.setColour (matteCharcoal);
     g.fillPath (p);
     
 }
@@ -152,12 +156,12 @@ void ParamComponent::resized()
     //Create Layout Changes
     //Slider
     sliderFlex.items = sliderArray; 
-    //sliderFlex.performLayout(sliderArea);
+    sliderFlex.performLayout(sliderArea);
     
     //Labels
     labelFlex.items = labelArray;
-    //labelFlex.performLayout(labelArea);
-    tempButton.setBounds(getLocalBounds());
+    labelFlex.performLayout(labelArea);
+    //tempButton.setBounds(getLocalBounds());
     
     
 }

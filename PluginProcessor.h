@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "JaneDelayAlgo.h"
+#include "DspModules.hpp"
 //#include "SimpleDelay.h"
 
 //==============================================================================
@@ -60,7 +61,8 @@ public:
 private:
     
     static const int kChannels = 2;
-    JaneDelay Jane[kChannels];
+    static const int numFlangers = 4;
+    JaneDelay Jane[kChannels][numFlangers];
     
     std::atomic<float>* delayTime  = nullptr;
     std::atomic<float>* feedBack  = nullptr;

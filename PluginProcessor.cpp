@@ -96,9 +96,14 @@ void JaneAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     
     //Give each delay the sample rate
+    for (int n = 0; n < numFlangers; n++)
+    {
+        
     for (int i = 0; i < kChannels; i++)
     {
-        Jane[i].init(sampleRate);
+        Jane[i][n].init(sampleRate);
+    }
+        
     }
     
 }
@@ -141,7 +146,6 @@ void JaneAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     //TODO have it be settable to either be mono or stero
     for (int channel = 0; channel < getTotalNumInputChannels(); channel++)
     {
-        
         //Get Current Sample input
         auto* channeldata = buffer.getWritePointer (channel);
         
@@ -156,16 +160,29 @@ void JaneAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
         dryMix = apvts.getRawParameterValue ("DRY");
         wetMix = apvts.getRawParameterValue ("WET");
         
-        
-        Jane[channel].setDelay(*delayTime, *feedBack, *Width, *freq, *JaneFilter);
-        Jane[channel].setMix(*dryMix, *wetMix);
+        for (int n = 0; n < numFlangers; n++)
+        {
+        Jane[channel][n].setDelay(*delayTime, *feedBack, *Width, *freq, *JaneFilter);
+        Jane[channel][n].setMix(*dryMix, *wetMix);
+        }
         
         
         for (int i = 0; i < buffer.getNumSamples(); i++)
         {
             float input = channeldata[i];
             
-            channeldata[i] = Jane[channel].getOutput(input, 0);
+            float outputOne = Jane[channel][0].getOutput(input, 0);
+//            float outputTwo = Jane[channel][1].getOutput(input, 0);
+//            float outputThree = Jane[channel][2].getOutput(input, 0);
+//            float outputFour = Jane[channel][3].getOutput(input, 0);
+            
+            
+            
+            //channeldata[i] = (outputOne + outputTwo + outputThree + outputFour) / 4.0f;
+            float limitOut = Holland::Utilities::SimpleLimiter(outputOne, 0.5f);
+            channeldata[i]  = limitOut;
+            
+            
         }
         
         
