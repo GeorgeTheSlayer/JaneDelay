@@ -38,7 +38,10 @@ public:
     //Set Euclidian Varibles
     void setClid(int steps, int pulses, int rotate);
     
+    Holland::Utilities::EuclidianGenerator Euclid;
+    
 private:
+    
 
     //Euclid Vars
     float Steps, Pulses, Rotate;
@@ -76,7 +79,10 @@ private:
     Holland::CustomOscillator::PhaseOsc Osc;
     Holland::Utilities::SmoothValue timeValueSmoothed, widthValueSmoothed;
     Holland::CustomFilters::AllPassFilter notchOne;
+    Holland::CustomOscillator::BoundsOsc Bounds;
     Holland::Utilities::SystemSpecs specs;
+    Holland::Utilities::DecimalToBinary decode;
+//    Holland::Utilities::EuclidianGenerator Euclid;
     
 };
 

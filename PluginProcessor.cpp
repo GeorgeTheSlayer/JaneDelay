@@ -162,7 +162,9 @@ void JaneAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
         
         for (int n = 0; n < numFlangers; n++)
         {
-        Jane[channel][n].setDelay(*delayTime, *feedBack, *Width, *freq, *JaneFilter);
+        Jane[channel][n].setDelay(0.1f, *feedBack, *Width, *freq, *JaneFilter);
+        Jane[channel][n].Euclid.Pulses = round(*delayTime * 8);
+        Jane[channel][n].Euclid.Rotate = round(*JaneFilter * 8);
         Jane[channel][n].setMix(*dryMix, *wetMix);
         }
         
