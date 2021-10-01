@@ -21,8 +21,10 @@ namespace RBJ {
 //Create Class for LowShelfFilter
 class LowShelfFilter final: public RBJFilterForm
 {
-    LowShelfFilter (float gain, float freq, float S) {setFreq(gain, freq, S);};
 public:
+    LowShelfFilter() {};
+    LowShelfFilter (float gain, float freq, float S) {setFreq(gain, freq, S);};
+    
     void setFreq (float gain, float freq, float S)
     {
         //Set Varibles
@@ -41,8 +43,10 @@ private:
 //Create Class for HighShelf Filter
 class HighShelfFilter final: public RBJFilterForm
 {
-    HighShelfFilter (const float gain, const float freq, const float S) {setFreq(gain, freq, S);};
 public:
+    HighShelfFilter() {};
+    HighShelfFilter (const float gain, const float freq, const float S) {setFreq(gain, freq, S);};
+    
     void setFreq (const float gain, const float freq, const float S)
     {
         //Set Varibles
@@ -61,8 +65,10 @@ private:
 //Create Class for Mid Freq
 class BellCurveFilter final: public RBJFilterForm
 {
-    BellCurveFilter (const float gain, const  float freq, const float BW) {setFreq(gain, freq, BW);};
 public:
+    BellCurveFilter() {};
+    BellCurveFilter (const float gain, const  float freq, const float BW) {setFreq(gain, freq, BW);};
+    
     void setFreq (const float gain, const float freq, const float BW)
     {
         this->Gain = gain;
@@ -81,6 +87,7 @@ class LowPassFilter final: public RBJFilterForm
 public:
     LowPassFilter() {};
     LowPassFilter (const float freq, const float Q) {setFreq(freq, Q);};
+    
     void setFreq (const float freq, const float Q)
     {
         this->Freq = freq;
@@ -95,8 +102,10 @@ private:
 //Create Class for HighPass Filter
 class HighPassFilter final: public RBJFilterForm
 {
-    HighPassFilter (float freq, float Q) {setFreq(freq, Q);};
 public:
+    HighPassFilter() {};
+    HighPassFilter (float freq, float Q) {setFreq(freq, Q);};
+    
     void setFreq (float freq, float Q)
     {
         this->Freq = freq;
@@ -111,8 +120,10 @@ private:
 //Create Class for All Pass Filter
 class AllPassFilter final: public RBJFilterForm
 {
-    AllPassFilter (float freq, float Q) {setFreq(freq, Q);};
 public:
+    AllPassFilter() {};
+    AllPassFilter (float freq, float Q) {setFreq(freq, Q);};
+    
     void setFreq (float freq, float Q)
     {
         this->Freq = freq;
@@ -124,7 +135,4 @@ private:
     void cookVaribles() override;
 };
 
-
-}
-}
-}
+}}}
