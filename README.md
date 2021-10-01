@@ -6,9 +6,12 @@ This project is split into two differnt parts:
 
 Custom made DSP library with a variety of objects for dsp development.
 
-<!-- #### Object Types
-1. Algorithms 
-- Fully Fleshed Out objects  -->
+#### Object Types
+1. Algorithms: Fully fleshed out audio effectsto be used in projects
+2. Filters: Simple Biquad Filter Library and Implementation
+3. Oscilators: Simple oscillators for sound generation and control over parameters
+4. Utilities: General purpose utilities for creating plugins and parameters
+5. Object Templates: Templates for which each object is created from so there is continuity between objects
 
 
 #### TODO:
