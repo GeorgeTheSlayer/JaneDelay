@@ -94,17 +94,13 @@ void JaneAudioProcessor::changeProgramName (int index, const juce::String& newNa
 //==============================================================================
 void JaneAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    spec.setSpecs(sampleRate, samplesPerBlock, 2);
     
-    //Give each delay the sample rate
-    for (int n = 0; n < numFlangers; n++)
-    {
-        
-    for (int i = 0; i < kChannels; i++)
-    {
-        Jane[i][n].init(sampleRate);
-    }
-        
-    }
+    for (int i = 0; i < hChannels; i++)
+        janeVibe[i].init(spec);
+
+
+    
     
 }
 
@@ -160,29 +156,19 @@ void JaneAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
         dryMix = apvts.getRawParameterValue ("DRY");
         wetMix = apvts.getRawParameterValue ("WET");
         
-        for (int n = 0; n < numFlangers; n++)
-        {
-        Jane[channel][n].setDelay(0.1f, *feedBack, *Width, *freq, *JaneFilter);
-        Jane[channel][n].Euclid.Pulses = round(*delayTime * 8);
-        Jane[channel][n].Euclid.Rotate = round(*JaneFilter * 8);
-        Jane[channel][n].setMix(*dryMix, *wetMix);
-        }
-        
+        //Set Params
+        janeVibe[channel].FeedBackParam.setValue(*feedBack);
+        janeVibe[channel].SpeedParam.setValue(*freq);
+        janeVibe[channel].TimeParam.setValue(*delayTime);
+        janeVibe[channel].WidthParam.setValue(*Width);
         
         for (int i = 0; i < buffer.getNumSamples(); i++)
         {
-            float input = channeldata[i];
-            
-            float outputOne = Jane[channel][0].getOutput(input, 0);
-//            float outputTwo = Jane[channel][1].getOutput(input, 0);
-//            float outputThree = Jane[channel][2].getOutput(input, 0);
-//            float outputFour = Jane[channel][3].getOutput(input, 0);
-            
-            
-            
-            //channeldata[i] = (outputOne + outputTwo + outputThree + outputFour) / 4.0f;
-            float limitOut = Holland::Utilities::SimpleLimiter(outputOne, 0.5f);
-            channeldata[i]  = limitOut;
+            //Process Data here
+            auto input = channeldata[i];
+            float vibeOut = janeVibe[channel].process(input);
+            float output = *dryMix * input + *wetMix * vibeOut;
+            channeldata[i] = output;
             
             
         }
@@ -247,9 +233,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout JaneAudioProcessor::createPa
     
     params.push_back (std::make_unique<juce::AudioParameterFloat> ("PARAMTWO", "paramtwo", juce::NormalisableRange<float> (0.0f, stop, interval, 1 ), init ) );
     
-    params.push_back (std::make_unique<juce::AudioParameterFloat> ("PARAMTHREE", "paramthree", juce::NormalisableRange<float> (0.0f, stop, interval, 1 ), init ) );
+    params.push_back (std::make_unique<juce::AudioParameterFloat> ("PARAMTHREE", "paramthree", juce::NormalisableRange<float> (0.01f, 1.0f, interval, 1 ), init ) );
     
-    params.push_back (std::make_unique<juce::AudioParameterFloat> ("PARAMFOUR", "paramfour", juce::NormalisableRange<float> (0.01f, stop, interval, 1 ), init ) );
+    params.push_back (std::make_unique<juce::AudioParameterFloat> ("PARAMFOUR", "paramfour", juce::NormalisableRange<float> (1.0f, 10.0f, 1.0f, 2.0f ), init ) );
     
     params.push_back (std::make_unique<juce::AudioParameterFloat> ("PARAMFIVE", "paramfive", juce::NormalisableRange<float> (0.0f, stop, interval, 1 ), init ) );
     

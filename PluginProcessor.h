@@ -9,9 +9,8 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "JaneDelayAlgo.h"
-#include "DspModules.hpp"
-//#include "SimpleDelay.h"
+#include "HollandLib/HollandLib.hpp"
+
 
 //==============================================================================
 /**
@@ -60,9 +59,8 @@ public:
     
 private:
     
-    static const int kChannels = 2;
-    static const int numFlangers = 4;
-    JaneDelay Jane[kChannels][numFlangers];
+    static const int hChannels = 2;
+
     
     std::atomic<float>* delayTime  = nullptr;
     std::atomic<float>* feedBack  = nullptr;
@@ -75,7 +73,8 @@ private:
     
     
     
-    juce::SmoothedValue<float, juce::ValueSmoothingTypes::Linear> delaySmooth;
+    Holland::SystemSpecs spec;
+    Holland::Algorithms::Jane janeVibe[hChannels];
     
     //Create Audio Process Tree
     juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
