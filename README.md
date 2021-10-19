@@ -1,3 +1,7 @@
+#TODO 
+
+Newest version of Juce broke the project. Will fix.
+
 # Project Overview
 
 This project is split into two differnt parts:
